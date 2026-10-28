@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../models/drink.dart';
 import 'drink_detail_page.dart';
+import 'add_product.dart';
 
 const Color warnaLatar = Color(0xFFFBF7F2);
 const Color warnaLatte = Color(0xFFD5B49A);
@@ -160,7 +161,7 @@ class HomePage extends StatelessWidget {
                                           .showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            '${drink.name} ditambahkan ke keranjang',
+                                            '${drink.name} ditambahkan ke keranjaang',
                                           ),
                                           backgroundColor: warnaCokelat,
                                           duration:
@@ -181,6 +182,17 @@ class HomePage extends StatelessWidget {
                 );
               },
             ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddProductPage(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
