@@ -4,10 +4,9 @@ import '../models/drink.dart';
 import '../models/cart_item.dart';
 import 'home_page.dart';
 import 'cart_page.dart';
-
-const Color biruUtama = Color(0xFFD9BCA5);
-const Color biruMuda = Color(0xFFFBF7F2);
-const Color warnaTeks = Color(0xFF6D5548);
+import 'login_page.dart';
+import 'add_product.dart';
+import 'edit_product.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -18,9 +17,8 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-  final List<CartItem> _cartItems = [];
 
-  final List<Drink> _drinkList = const [
+  final List<Drink> _drinkList = [
     Drink(
       id: '1',
       name: 'Espresso',
@@ -47,72 +45,130 @@ class _MainScreenState extends State<MainScreen> {
     ),
   ];
 
+  final List<CartItem> _cartItems = [];
+
   void _addToCart(Drink drink, int quantity) {
     setState(() {
-      final index = _cartItems.indexWhere(
+      final existingIndex = _cartItems.indexWhere(
         (item) => item.drink.id == drink.id,
       );
 
-      if (index >= 0) {
-        _cartItems[index].quantity += quantity;
+      if (existingIndex >= 0) {
+        _cartItems[existingIndex].quantity += quantity;
       } else {
         _cartItems.add(
-          CartItem(drink: drink, quantity: quantity),
+          CartItem(
+            drink: drink,
+            quantity: quantity,
+          ),
         );
       }
     });
   }
 
-  void _removeFromCart(String id) {
+  void _addProduct(Drink drink) {
     setState(() {
-      _cartItems.removeWhere(
-        (item) => item.drink.id == id,
+      _drinkList.add(drink);
+    });
+  }
+
+  void _editProduct(Drink updatedDrink) {
+    setState(() {
+      final index = _drinkList.indexWhere(
+        (drink) => drink.id == updatedDrink.id,
+      );
+
+      if (index != -1) {
+        _drinkList[index] = updatedDrink;
+      }
+    });
+  }
+
+  void _deleteProduct(Drink drink) {
+    setState(() {
+      _drinkList.removeWhere(
+        (item) => item.id == drink.id,
       );
     });
   }
 
+  void _openAddProduct() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddProductPage(
+          onSave: _addProduct,
+        ),
+      ),
+    );
+  }
+
+  void _openEditProduct(Drink drink) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProductPage(
+          existingDrink: drink,
+          onSave: _editProduct,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: biruMuda,
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: [
-          HomePage(
-            drinkList: _drinkList,
-            onAddToCart: _addToCart,
-          ),
-          CartPage(
-            cartItems: _cartItems,
-            onRemoveFromCart: _removeFromCart,
-          ),
-        ],
+    final List<Widget> pages = [
+      HomePage(
+        drinkList: _drinkList,
+        onAddToCart: _addToCart,
+        onEdit: _openEditProduct,
+        onDelete: _deleteProduct,
+        onAdd: (_) => _openAddProduct(),
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        backgroundColor: Colors.white,
-        indicatorColor: const Color(0xFFDCE8FF),
-        onDestinationSelected: (index) {
+      CartPage(
+        cartItems: _cartItems,
+        onRemoveFromCart: (drinkId) {
+          setState(() {
+            _cartItems.removeWhere(
+              (item) => item.drink.id == drinkId,
+            );
+          });
+        },
+      ),
+      const LoginPage(),
+    ];
+
+    return Scaffold(
+      body: pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color(0xFF29211C),
+        selectedItemColor: const Color(0xFFB68A5A),
+        unselectedItemColor: const Color(0xFFD0C0AF),
+        selectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+        unselectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.w500,
+        ),
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: (index) {
           setState(() {
             _selectedIndex = index;
           });
         },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.local_cafe_outlined),
-            selectedIcon: Icon(
-              Icons.local_cafe,
-              color: biruUtama,
-            ),
-            label: 'Menu',
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.shopping_cart_outlined),
-            selectedIcon: Icon(
-              Icons.shopping_cart,
-              color: biruUtama,
-            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
             label: 'Keranjang',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profil',
           ),
         ],
       ),

@@ -1,12 +1,13 @@
+
 import 'package:flutter/material.dart';
 import '../models/cart_item.dart';
 
-const Color warnaLatar = Color(0xFFFBF7F2);
-const Color warnaLatte = Color(0xFFD5B49A);
-const Color warnaCokelat = Color(0xFF795B49);
-const Color warnaTeks = Color(0xFF594438);
-const Color warnaKrem = Color(0xFFF0E2D5);
-const Color warnaBorder = Color(0xFFE5D4C5);
+const Color warnaLatar = Color(0xFF151311);
+const Color warnaLatte = Color(0xFFB68A5A);
+const Color warnaCokelat = Color(0xFFD0C0AF);
+const Color warnaTeks = Color(0xFFF1E7D9);
+const Color warnaKrem = Color(0xFF29211C);
+const Color warnaBorder = Color(0xFF6B5543);
 
 class CartPage extends StatefulWidget {
   final List<CartItem> cartItems;
@@ -54,9 +55,8 @@ class _CartPageState extends State<CartPage> {
     final nomorMeja = int.tryParse(teksNomorMeja);
 
     setState(() {
-      _errorNama = nama.isEmpty
-          ? 'Nama Pemesan tidak boleh kosong'
-          : null;
+      _errorNama =
+          nama.isEmpty ? 'Nama Pemesan tidak boleh kosong' : null;
 
       if (teksNomorMeja.isEmpty) {
         _errorMeja = 'Nomor Meja tidak boleh kosong';
@@ -76,12 +76,12 @@ class _CartPageState extends State<CartPage> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        backgroundColor: warnaLatar,
+        backgroundColor: warnaKrem,
         title: const Text(
           'Checkout Berhasil!',
           style: TextStyle(
             color: warnaTeks,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.bold,
           ),
         ),
         content: Text(
@@ -94,7 +94,7 @@ class _CartPageState extends State<CartPage> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: warnaLatte,
-              foregroundColor: warnaTeks,
+              foregroundColor: warnaLatar,
               elevation: 0,
             ),
             onPressed: () => Navigator.pop(dialogContext),
@@ -109,9 +109,13 @@ class _CartPageState extends State<CartPage> {
     return InputDecoration(
       hintText: hint,
       errorText: errorText,
-      hintStyle: const TextStyle(color: Color(0xFFAA9687)),
+      hintStyle: const TextStyle(color: warnaCokelat),
+      errorStyle: const TextStyle(
+        color: Color(0xFFFF7777),
+        fontWeight: FontWeight.w500,
+      ),
       filled: true,
-      fillColor: Colors.white,
+      fillColor: warnaLatar,
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 14,
         vertical: 13,
@@ -127,9 +131,13 @@ class _CartPageState extends State<CartPage> {
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide: const BorderSide(
-          color: warnaCokelat,
+          color: warnaLatte,
           width: 1.5,
         ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: Color(0xFFFF7777)),
       ),
     );
   }
@@ -143,12 +151,12 @@ class _CartPageState extends State<CartPage> {
           'Keranjang',
           style: TextStyle(
             color: warnaTeks,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: warnaKrem,
+        backgroundColor: warnaLatar,
+        foregroundColor: warnaTeks,
         elevation: 0,
-        iconTheme: const IconThemeData(color: warnaTeks),
       ),
       body: widget.cartItems.isEmpty
           ? const Center(
@@ -158,7 +166,7 @@ class _CartPageState extends State<CartPage> {
                   Icon(
                     Icons.shopping_cart_outlined,
                     size: 52,
-                    color: warnaCokelat,
+                    color: warnaLatte,
                   ),
                   SizedBox(height: 10),
                   Text(
@@ -166,7 +174,7 @@ class _CartPageState extends State<CartPage> {
                     style: TextStyle(
                       color: warnaTeks,
                       fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 5),
@@ -185,26 +193,26 @@ class _CartPageState extends State<CartPage> {
                   style: TextStyle(
                     color: warnaTeks,
                     fontSize: 19,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 12),
 
                 ...widget.cartItems.map((item) {
                   return Card(
-                    color: Colors.white,
-                    elevation: 1,
+                    color: warnaKrem,
+                    elevation: 2,
                     margin: const EdgeInsets.only(bottom: 10),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(14),
                       side: const BorderSide(color: warnaBorder),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(9),
+                      padding: const EdgeInsets.all(10),
                       child: Row(
                         children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(9),
                             child: Image.asset(
                               item.drink.imageUrl,
                               width: 68,
@@ -214,10 +222,10 @@ class _CartPageState extends State<CartPage> {
                                 return Container(
                                   width: 68,
                                   height: 68,
-                                  color: warnaKrem,
+                                  color: const Color(0xFF3B3028),
                                   child: const Icon(
                                     Icons.local_cafe,
-                                    color: warnaCokelat,
+                                    color: warnaLatte,
                                     size: 30,
                                   ),
                                 );
@@ -233,7 +241,7 @@ class _CartPageState extends State<CartPage> {
                                   item.drink.name,
                                   style: const TextStyle(
                                     color: warnaTeks,
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.bold,
                                     fontSize: 15,
                                   ),
                                 ),
@@ -241,7 +249,8 @@ class _CartPageState extends State<CartPage> {
                                 Text(
                                   formatRupiah(item.drink.price),
                                   style: const TextStyle(
-                                    color: warnaCokelat,
+                                    color: warnaLatte,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 const SizedBox(height: 3),
@@ -269,7 +278,7 @@ class _CartPageState extends State<CartPage> {
                               widget.onRemoveFromCart(item.drink.id);
                             },
                             icon: const Icon(Icons.delete_outline),
-                            color: const Color(0xFFAD7968),
+                            color: const Color(0xFFFF7777),
                           ),
                         ],
                       ),
@@ -293,15 +302,15 @@ class _CartPageState extends State<CartPage> {
                         'Total Harga',
                         style: TextStyle(
                           color: warnaTeks,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
                         formatRupiah(totalHarga),
                         style: const TextStyle(
-                          color: warnaTeks,
+                          color: warnaLatte,
                           fontSize: 18,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -315,7 +324,7 @@ class _CartPageState extends State<CartPage> {
                   style: TextStyle(
                     color: warnaTeks,
                     fontSize: 19,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -327,13 +336,14 @@ class _CartPageState extends State<CartPage> {
                       'Nama Pemesan',
                       style: TextStyle(
                         color: warnaTeks,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 7),
 
                     TextField(
                       controller: _namaController,
+                      style: const TextStyle(color: warnaTeks),
                       decoration: dekorasiInput(
                         'Masukkan nama pemesan',
                         _errorNama,
@@ -351,7 +361,7 @@ class _CartPageState extends State<CartPage> {
                       'Nomor Meja',
                       style: TextStyle(
                         color: warnaTeks,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 7),
@@ -359,6 +369,7 @@ class _CartPageState extends State<CartPage> {
                     TextField(
                       controller: _mejaController,
                       keyboardType: TextInputType.number,
+                      style: const TextStyle(color: warnaTeks),
                       decoration: dekorasiInput(
                         'Masukkan nomor meja (1–20)',
                         _errorMeja,
@@ -378,7 +389,7 @@ class _CartPageState extends State<CartPage> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: warnaLatte,
-                          foregroundColor: warnaTeks,
+                          foregroundColor: warnaLatar,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(11),
@@ -389,7 +400,7 @@ class _CartPageState extends State<CartPage> {
                           'Checkout',
                           style: TextStyle(
                             fontSize: 15,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),

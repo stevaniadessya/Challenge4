@@ -15,6 +15,11 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  static const Color mocca = Color(0xFF8B6B52);
+  static const Color darkMocca = Color(0xFF493528);
+  static const Color cream = Color(0xFFF1E7D9);
+  static const Color bronze = Color(0xFFB68A5A);
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -25,12 +30,14 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: mocca,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFF6D05FA),
-              Color(0xFF2980B9),
+              Color(0xFF9B795F),
+              Color(0xFF6D4E39),
+              Color(0xFF493528),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -48,42 +55,37 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Image.asset(
                     'assets/login.png',
-                    height: 250,
+                    height: 220,
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {
                       return const Icon(
-                        Icons.lock,
+                        Icons.coffee,
                         size: 100,
-                        color: Colors.white,
+                        color: cream,
                       );
                     },
                   ),
-
                   const SizedBox(height: 30),
-
                   const Text(
                     'Welcome Back!',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: cream,
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   const SizedBox(height: 10),
-
                   const Text(
                     'Masukkan email dan password Anda untuk melanjutkan',
                     style: TextStyle(
-                      color: Colors.white70,
+                      color: cream,
                       fontSize: 16,
                     ),
                     textAlign: TextAlign.center,
                   ),
-
                   const SizedBox(height: 40),
-
                   Card(
+                    color: const Color(0xFFF7F0E7),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -94,120 +96,133 @@ class _LoginPageState extends State<LoginPage> {
                         key: _formKey,
                         child: Column(
                           children: [
-                            // Input email
                             TextFormField(
                               controller: _emailController,
                               keyboardType: TextInputType.emailAddress,
-                              decoration: const InputDecoration(
+                              style: const TextStyle(
+                                color: cream,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              decoration: InputDecoration(
                                 labelText: 'Email',
                                 hintText: 'contoh: NamaKamu@email.com',
-                                prefixIcon: Icon(Icons.email_outlined),
-                                border: OutlineInputBorder(),
+                                prefixIcon: const Icon(Icons.email),
+                                filled: true,
+                                fillColor: const Color(0xFF29211C),
+                                labelStyle: const TextStyle(
+                                  color: cream,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                hintStyle: const TextStyle(
+                                  color: Color(0xFFD0C0AF),
+                                ),
+                                prefixIconColor: bronze,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Email tidak boleh kosong';
                                 }
-
-                                final emailPattern = RegExp(
+                                if (!RegExp(
                                   r'^[^@]+@[^@]+\.[^@]+$',
-                                );
-
-                                if (!emailPattern.hasMatch(value)) {
-                                  return 'Format email tidak valid';
+                                ).hasMatch(value)) {
+                                  return 'Masukkan email yang valid';
                                 }
-
                                 return null;
                               },
                             ),
-
                             const SizedBox(height: 20),
-
-                            // Input password
                             TextFormField(
                               controller: _passwordController,
                               obscureText: true,
-                              decoration: const InputDecoration(
+                              style: const TextStyle(
+                                color: cream,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              decoration: InputDecoration(
                                 labelText: 'Password',
-                                prefixIcon: Icon(Icons.lock_outline),
-                                border: OutlineInputBorder(),
+                                prefixIcon: const Icon(Icons.lock),
+                                filled: true,
+                                fillColor: const Color(0xFF29211C),
+                                labelStyle: const TextStyle(
+                                  color: cream,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                prefixIconColor: bronze,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Password tidak boleh kosong';
                                 }
-
                                 if (value.length < 6) {
                                   return 'Password minimal 6 karakter';
                                 }
-
                                 return null;
                               },
                             ),
-
                             const SizedBox(height: 25),
-
-                            // Tombol login
                             SizedBox(
                               width: double.infinity,
                               height: 50,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      const Color(0xFF298059),
-                                  foregroundColor: Colors.white,
+                                  backgroundColor: bronze,
+                                  foregroundColor: darkMocca,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
                                 onPressed: () {
-                                      // Cek apakah semua inputan (email & password) valid
-                                      if (_formKey.currentState!.validate()) {
-                                        
-                                        // Opsional: Tampilkan SnackBar sukses sebentar
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
-                                            content: Text('Login Berhasil!'),
-                                            backgroundColor: Colors.green,
-                                          ),
-                                        );
-
-                                        // Pindah ke MainScreen
-                                        Navigator.pushReplacement( // Gunakan pushReplacement agar tidak bisa back ke login
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => MainScreen(), 
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    child: const Text(
-                                      'Masuk',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                                  if (_formKey.currentState!.validate()) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Login Berhasil!'),
+                                        backgroundColor: Colors.green,
                                       ),
-                                    ),
+                                    );
+
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => MainScreen(),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: const Text(
+                                  'Masuk',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                   
-
+                              ),
+                            ),
                             const SizedBox(height: 16),
-
-                            // Tombol untuk berpindah ke halaman register
                             TextButton(
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const RegisterPage(),
+                                    builder: (context) =>
+                                        const RegisterPage(),
                                   ),
                                 );
                               },
                               child: const Text(
                                 'Belum punya akun? Daftar di sini',
-                                style: TextStyle(color: Colors.blueAccent),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: bronze,
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: bronze,
+                                ),
                               ),
                             ),
                           ],
